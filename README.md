@@ -62,7 +62,7 @@ Para rodar este projeto em sua máquina, você precisará do seguinte:
 
 ## Uso da API
 
-Você pode usar ferramentas como [Postman](https://www.postman.com/) ou [Insomnial](https://insomnia.rest/) para interagir com a API. Aqui estão alguns exemplos de como usar os endpoints:
+Você pode usar ferramentas como [Postman](https://www.postman.com/) ou [Insomnia](https://insomnia.rest/) para interagir com a API. Aqui estão alguns exemplos de como usar os endpoints:
 
 ### Produtos
 
