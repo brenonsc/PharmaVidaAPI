@@ -19,15 +19,10 @@ public class ProdutoValidator : AbstractValidator<Produto>
             .MaximumLength(100)
             .WithMessage("O fabricante do produto não pode ter mais de 100 caracteres.");
         
-        RuleFor(p => p.DosagemEmMg)
-            .NotEmpty()
-            .WithMessage("A dosagem do produto não pode ser vazia.")
-            .GreaterThan(0)
-            .WithMessage("A dosagem do produto deve ser maior que 0.");
-        
         RuleFor(p => p.PrecisaReceita)
-            .NotEmpty()
+            .NotNull()
             .WithMessage("A informação se o produto precisa de receita não pode ser vazia.");
+        
         
         RuleFor(p => p.DataVencimento)
             .NotEmpty()

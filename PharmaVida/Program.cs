@@ -16,6 +16,11 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
+        builder.Services.AddControllers()
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+            });
         
         //Conexão com o banco de dados
         var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -23,9 +28,11 @@ public class Program
 
         //Registrar validação das entidades
         builder.Services.AddTransient<IValidator<Produto>, ProdutoValidator>();
+        builder.Services.AddTransient<IValidator<Categoria>, CategoriaValidator>();
         
         //Registrar as classes de serviço
         builder.Services.AddScoped<IProdutoService, ProdutoService>();
+        builder.Services.AddScoped<ICategoriaService, CategoriaService>();
         
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

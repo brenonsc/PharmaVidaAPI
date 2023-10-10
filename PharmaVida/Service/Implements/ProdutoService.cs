@@ -16,6 +16,7 @@ public class ProdutoService : IProdutoService
     public async Task<IEnumerable<Produto>> GetAll()
     {
         return await _context.Produtos
+            .Include(p => p.Categoria)
             .ToListAsync();
     }
 
@@ -24,6 +25,7 @@ public class ProdutoService : IProdutoService
         try
         {
             var produto = await _context.Produtos
+                .Include(p => p.Categoria)
                 .FirstAsync(i => i.Id == id);
             return produto;
         }
@@ -36,12 +38,23 @@ public class ProdutoService : IProdutoService
     public async Task<IEnumerable<Produto>> GetByTitulo(string titulo)
     {
         var produto = await _context.Produtos
+            .Include(p => p.Categoria)
             .Where(t => t.Titulo.Contains(titulo)).ToListAsync();
         return produto;
     }
 
     public async Task<Produto?> Create(Produto produto)
     {
+        if (produto.Categoria is not null)
+        {
+            var buscaCategoria = await _context.Categorias.FindAsync(produto.Categoria.Id);
+            
+            if (buscaCategoria == null)
+                return null;
+        }
+        
+        produto.Categoria = produto.Categoria is not null ? _context.Categorias.FirstOrDefault(t => t.Id == produto.Categoria.Id) : null;
+        
         await _context.Produtos.AddAsync(produto);
         await _context.SaveChangesAsync();
         
@@ -54,6 +67,16 @@ public class ProdutoService : IProdutoService
 
         if (produtoUpdate == null)
             return null;
+        
+        if (produto.Categoria is not null)
+        {
+            var buscaCategoria = await _context.Categorias.FindAsync(produto.Categoria.Id);
+            
+            if (buscaCategoria == null)
+                return null;
+        }
+        
+        produto.Categoria = produto.Categoria is not null ? _context.Categorias.FirstOrDefault(t => t.Id == produto.Categoria.Id) : null;
         
         _context.Entry(produtoUpdate).State = EntityState.Detached;
         _context.Entry(produto).State = EntityState.Modified;
